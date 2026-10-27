@@ -1,0 +1,32 @@
+car_id,model,car_type,price_per_day,status
+400001,Maruti Swift,Hatchback,1800,Available
+400002,Hyundai i20,Hatchback,2000,Available
+400003,Tata Nexon,SUV,2500,Rented
+400004,Hyundai Creta,SUV,3200,Rented
+400005,Toyota Innova Crysta,MPV,4500,Available
+400006,Maruti Ertiga,MPV,3000,Under Maintenance
+400007,Honda City,Sedan,3000,Available
+400008,Skoda Slavia,Sedan,3500,Available
+400009,Mahindra Thar,SUV,4000,Available
+400010,Tata Punch,Hatchback,2200,Rented
+400011,Maruti Brezza,SUV,2600,Available
+400012,Tata Altroz,Hatchback,2300,Available
+400013,Hyundai Verna,Sedan,2800,Available
+400014,MG Hector,SUV,4200,Rented
+400015,Renault Triber,MPV,2900,Available
+400016,Kia Seltos,SUV,3500,Available
+400017,Skoda Kushaq,SUV,3600,Available
+400018,Tata Tiago,Hatchback,2100,Rented
+400019,Mercedes C-Class,Sedan,6000,Available
+400020,Volvo XC60,SUV,7000,Available
+400021,Hyundai Venue,SUV,3000,Available
+400022,MG Astor,SUV,3300,Available
+400023,Tata Safari,SUV,4200,Rented
+400024,Maruti Dzire,Sedan,2600,Available
+400025,Honda Amaze,Sedan,2800,Available
+400026,Fiat Urban Cross,SUV,2900,Under Maintenance
+400027,Volkswagen Virtus,Sedan,3100,Available
+400028,Toyota Fortuner,SUV,5200,Available
+400029,Jeep Compass,SUV,4800,Rented
+400030,Renault Kwid,Hatchback,1800,Available
+400031,audi,Sedan,10000.0,Available

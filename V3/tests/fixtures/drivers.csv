@@ -1,0 +1,6 @@
+driver_id,name,username,password,phone,availability
+200001,Vijay Kumar,vijay_driver,vijay123,9876543211,Available
+200002,Suresh Babu,suresh_driver,suresh123,9840123457,Available
+200003,Rahul Das,rahul_driver,rahul123,9003123456,Offline
+200004,Arun Prakash,arun_driver,arun123,9884123456,Available
+200005,Mohan Raj,mohan_driver,mohan123,9791123456,Offline

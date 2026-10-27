@@ -1,0 +1,1 @@
+booking_id,customer_id,car_id,start_date,end_date,rental_type,driver_id,total_amount,status,payment_status

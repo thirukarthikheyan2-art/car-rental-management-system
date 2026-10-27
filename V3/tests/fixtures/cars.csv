@@ -1,0 +1,11 @@
+car_id,model,car_type,seating_capacity,price_per_day,status
+400001,Maruti Swift,Hatchback,4,1800,Available
+400002,Hyundai i20,Hatchback,6,2000,Available
+400003,Tata Nexon,SUV,7,2500,Available
+400004,Hyundai Creta,SUV,7,3200,Available
+400005,Toyota Innova Crysta,MPV,7,4500,Available
+400006,Maruti Ertiga,MPV,7,3000,Under Maintenance
+400007,Honda City,Sedan,4,3000,Available
+400008,Skoda Slavia,Sedan,4,3500,Available
+400009,Mahindra Thar,SUV,6,4000,Available
+400010,Tata Punch,Hatchback,4,2200,Available

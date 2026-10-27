@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>To-Do Notebook</title>
+<style>
+  :root{
+    --paper:#fffdf5;
+    --line:#d9e2f3;
+    --ink:#1f2937;
+    --accent:#2563eb;
+    --danger:#dc2626;
+    --ok:#16a34a;
+    --shadow:0 10px 30px rgba(0,0,0,.12);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    min-height:100vh;
+    font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+    background:linear-gradient(135deg,#1e293b,#0f172a);
+    display:flex;
+    justify-content:center;
+    padding:24px 12px;
+    color:var(--ink);
+  }
+  .book{
+    width:min(720px,100%);
+    background:var(--paper);
+    border-radius:14px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    background-image:repeating-linear-gradient(to bottom,transparent 0 31px,var(--line) 31px 32px);
+    background-position:0 92px;
+  }
+  header{
+    padding:22px 26px 14px;
+    background:linear-gradient(90deg,#2563eb,#7c3aed);
+    color:#fff;
+  }
+  header h1{margin:0;font-size:24px;letter-spacing:.5px}
+  header p{margin:6px 0 0;opacity:.85;font-size:13px}
+  .toolbar{
+    display:flex;
+    gap:8px;
+    padding:16px 26px 8px;
+    flex-wrap:wrap;
+    align-items:center;
+    background:rgba(255,253,245,.9);
+    position:sticky;
+    top:0;
+    backdrop-filter:blur(4px);
+    z-index:5;
+  }
+  .toolbar input[type=search]{
+    flex:1 1 180px;
+  }
+  input,select,button{
+    font:inherit;
+  }
+  .toolbar input,.toolbar select{
+    padding:9px 12px;
+    border:1px solid #cbd5e1;
+    border-radius:8px;
+    background:#fff;
+    outline:none;
+  }
+  .toolbar input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+  .filters{display:flex;gap:6px}
+  .filters button{
+    padding:8px 12px;
+    border:1px solid #cbd5e1;
+    background:#fff;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:13px;
+  }
+  .filters button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+  form.add{
+    display:flex;
+    gap:8px;
+    padding:8px 26px 18px;
+    background:rgba(255,253,245,.9);
+  }
+  form.add input[type=text]{
+    flex:1;
+    padding:12px 14px;
+    border:1px solid #cbd5e1;
+    border-radius:8px;
+    background:#fff;
+    outline:none;
+  }
+  form.add input[type=text]:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+  form.add button{
+    padding:12px 18px;
+    border:0;
+    background:var(--accent);
+    color:#fff;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:600;
+  }
+  form.add button:hover{background:#1d4ed8}
+  ul#list{list-style:none;margin:0;padding:0 26px 10px}
+  li.todo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:11px 4px;
+    border-bottom:1px dashed #cbd5e1;
+    line-height:1.5;
+  }
+  li.todo:hover{background:rgba(37,99,235,.05)}
+  li.todo input[type=checkbox]{
+    width:19px;height:19px;accent-color:var(--ok);cursor:pointer;flex:none;
+  }
+  li.todo .text{flex:1;word-break:break-word}
+  li.todo.done .text{text-decoration:line-through;color:#94a3b8}
+  li.todo .date{font-size:11px;color:#64748b;flex:none}
+  .icon-btn{
+    border:0;background:transparent;cursor:pointer;font-size:15px;
+    padding:5px 7px;border-radius:6px;opacity:.6;flex:none;
+  }
+  .icon-btn:hover{opacity:1;background:#e2e8f0}
+  .icon-btn.del:hover{background:#fee2e2;color:var(--danger)}
+  li.todo .edit-input{
+    flex:1;padding:7px 10px;border:1px solid var(--accent);border-radius:6px;outline:none;
+  }
+  .stats{
+    display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+    padding:12px 26px 22px;font-size:13px;color:#475569;
+    background:rgba(255,253,245,.9);
+  }
+  .stats button{
+    border:1px solid #cbd5e1;background:#fff;border-radius:8px;
+    padding:7px 12px;cursor:pointer;font-size:13px;
+  }
+  .stats button:hover{border-color:var(--danger);color:var(--danger)}
+  .empty{padding:26px;text-align:center;color:#94a3b8;font-size:14px}
+  @media(max-width:520px){
+    .toolbar,form.add,.stats{padding-left:16px;padding-right:16px}
+    ul#list{padding:0 16px 10px}
+    header{padding:18px 16px 12px}
+    li.todo .date{display:none}
+  }
+</style>
+</head>
+<body>
+<div class="book">
+  <header>
+    <h1>&#128211; To-Do Notebook</h1>
+    <p id="today"></p>
+  </header>
+
+  <div class="toolbar">
+    <input type="search" id="search" placeholder="Search notes...">
+    <div class="filters" id="filters">
+      <button data-f="all" class="active">All</button>
+      <button data-f="active">Active</button>
+      <button data-f="done">Done</button>
+    </div>
+  </div>
+
+  <form class="add" id="addForm" autocomplete="off">
+    <input type="text" id="newText" placeholder="Write a new task..." required maxlength="200">
+    <button type="submit">Add</button>
+  </form>
+
+  <ul id="list"></ul>
+  <div class="empty" id="empty" hidden>Nothing here yet. Add your first task!</div>
+
+  <div class="stats">
+    <span id="count">0 tasks</span>
+    <button id="clearDone">Clear completed</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var KEY='todoNotebook.items';
+  var items=[];
+  var filter='all';
+  var query='';
+  var editingId=null;
+
+  try{ items=JSON.parse(localStorage.getItem(KEY))||[]; }catch(e){ items=[]; }
+
+  var list=document.getElementById('list');
+  var empty=document.getElementById('empty');
+  var count=document.getElementById('count');
+  var newText=document.getElementById('newText');
+
+  document.getElementById('today').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(items)); }catch(e){} }
+
+  function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+
+  function esc(s){ return s.replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  }); }
+
+  function fmt(ts){
+    return new Date(ts).toLocaleDateString(undefined,{month:'short',day:'numeric'});
+  }
+
+  function visible(){
+    return items.filter(function(it){
+      if(filter==='active'&&it.done) return false;
+      if(filter==='done'&&!it.done) return false;
+      if(query&&it.text.toLowerCase().indexOf(query)===-1) return false;
+      return true;
+    });
+  }
+
+  function render(){
+    var vis=visible();
+    list.innerHTML='';
+    vis.forEach(function(it){
+      var li=document.createElement('li');
+      li.className='todo'+(it.done?' done':'');
+
+      if(editingId===it.id){
+        var inp=document.createElement('input');
+        inp.className='edit-input';
+        inp.value=it.text;
+        inp.maxLength=200;
+        li.appendChild(inp);
+        list.appendChild(li);
+        inp.focus();
+        inp.setSelectionRange(inp.value.length,inp.value.length);
+        inp.onblur=commit;
+        inp.onkeydown=function(e){
+          if(e.key==='Enter'){ e.preventDefault(); commit(); }
+          if(e.key==='Escape'){ editingId=null; render(); }
+        };
+        function commit(){
+          var v=inp.value.trim();
+          if(v) it.text=v;
+          editingId=null; save(); render();
+        }
+        return;
+      }
+
+      var cb=document.createElement('input');
+      cb.type='checkbox'; cb.checked=it.done;
+      cb.onclick=function(){ it.done=!it.done; it.doneAt=it.done?Date.now():null; save(); render(); };
+
+      var span=document.createElement('span');
+      span.className='text';
+      span.textContent=it.text;
+      span.ondblclick=function(){ editingId=it.id; render(); };
+
+      var date=document.createElement('span');
+      date.className='date';
+      date.textContent=fmt(it.createdAt);
+
+      var edit=document.createElement('button');
+      edit.className='icon-btn'; edit.title='Edit'; edit.innerHTML='&#9998;';
+      edit.onclick=function(){ editingId=it.id; render(); };
+
+      var del=document.createElement('button');
+      del.className='icon-btn del'; del.title='Delete'; del.innerHTML='&#10005;';
+      del.onclick=function(){ items=items.filter(function(x){return x.id!==it.id;}); save(); render(); };
+
+      li.appendChild(cb); li.appendChild(span); li.appendChild(date); li.appendChild(edit); li.appendChild(del);
+      list.appendChild(li);
+    });
+
+    empty.hidden=vis.length>0;
+
+    var total=items.length;
+    var open=items.filter(function(i){return !i.done;}).length;
+    count.textContent=total===0?'0 tasks':(open+' open / '+total+' total');
+  }
+
+  document.getElementById('addForm').onsubmit=function(e){
+    e.preventDefault();
+    var v=newText.value.trim();
+    if(!v) return;
+    items.unshift({id:uid(),text:v,done:false,createdAt:Date.now(),doneAt:null});
+    newText.value='';
+    newText.focus();
+    save(); render();
+  };
+
+  document.getElementById('filters').onclick=function(e){
+    var b=e.target.closest('button'); if(!b) return;
+    filter=b.dataset.f;
+    [].forEach.call(this.children,function(x){ x.classList.toggle('active',x===b); });
+    render();
+  };
+
+  document.getElementById('search').oninput=function(){
+    query=this.value.trim().toLowerCase(); render();
+  };
+
+  document.getElementById('clearDone').onclick=function(){
+    items=items.filter(function(i){ return !i.done; });
+    save(); render();
+  };
+
+  render();
+})();
+</script>
+</body>
+</html>
